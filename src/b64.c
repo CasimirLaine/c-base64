@@ -14,7 +14,7 @@ static const unsigned char INDEX_TABLE[] = {
 };
 static const unsigned char PADDING = '=';
 
-unsigned char indexOf(unsigned char encodedChar) {
+unsigned char indexOf(const unsigned char encodedChar) {
 	for (unsigned char index = 0; index < sizeof(INDEX_TABLE); index++) {
 		if (INDEX_TABLE[index] == encodedChar) {
 			return index;
@@ -35,13 +35,16 @@ unsigned char* b64_encode(const unsigned char* string) {
 	}
 	for (unsigned int index = 0; index < lenght; index += 3) {
 		const unsigned int encodeOffset = index / 3;
-		const unsigned char first = string[index];
-		const unsigned char second = index + 1 < lenght ? string[index + 1] : 0;
-		const unsigned char third = index + 2 < lenght ? string[index + 2] : 0;
-		*(b64String + index + encodeOffset) = INDEX_TABLE[first >> 2];
-		*(b64String + index + 1 + encodeOffset) = INDEX_TABLE[(first & 3) << 4 | second >> 4];
-		*(b64String + index + 2 + encodeOffset) = second != 0 ? INDEX_TABLE[(second & 15) << 2 | third >> 6] : PADDING;
-		*(b64String + index + 3 + encodeOffset) = third != 0 ? INDEX_TABLE[third & 63] : PADDING;
+		const unsigned char decodedBytes[3] = {
+			string[index],
+			index + 1 < lenght ? string[index + 1] : 0,
+			index + 2 < lenght ? string[index + 2] : 0
+		};
+		unsigned char* sequenceOffset = b64String + index + encodeOffset;
+		*(sequenceOffset) = INDEX_TABLE[decodedBytes[0] >> 2];
+		*(sequenceOffset + 1) = INDEX_TABLE[(decodedBytes[0] & 3) << 4 | decodedBytes[1] >> 4];
+		*(sequenceOffset + 2) = decodedBytes[1] != 0 ? INDEX_TABLE[(decodedBytes[1] & 15) << 2 | decodedBytes[2] >> 6] : PADDING;
+		*(sequenceOffset + 3) = decodedBytes[2] != 0 ? INDEX_TABLE[decodedBytes[2] & 63] : PADDING;
 	}
 	b64String[encodedLenght - 1] = '\0';
 	return b64String;
