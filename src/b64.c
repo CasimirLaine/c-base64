@@ -23,7 +23,7 @@ unsigned char indexOf(const unsigned char encodedChar) {
 	return PADDING;
 }
 
-unsigned char* b64_encode(const unsigned char* string) {
+unsigned char* b64_encode(const unsigned char const* string) {
 	if (string == NULL) {
 		return NULL;
 	}
@@ -34,12 +34,12 @@ unsigned char* b64_encode(const unsigned char* string) {
 		return NULL;
 	}
 	for (unsigned int index = 0; index < lenght; index += 3) {
-		const unsigned int encodeOffset = index / 3;
 		const unsigned char decodedBytes[3] = {
 			string[index],
 			index + 1 < lenght ? string[index + 1] : 0,
 			index + 2 < lenght ? string[index + 2] : 0
 		};
+		const unsigned int encodeOffset = index / 3;
 		unsigned char* sequenceOffset = b64String + index + encodeOffset;
 		*(sequenceOffset) = INDEX_TABLE[decodedBytes[0] >> 2];
 		*(sequenceOffset + 1) = INDEX_TABLE[(decodedBytes[0] & 3) << 4 | decodedBytes[1] >> 4];
@@ -50,38 +50,37 @@ unsigned char* b64_encode(const unsigned char* string) {
 	return b64String;
 }
 
-unsigned char* b64_decode(const unsigned char* b64String) {
+unsigned char* b64_decode(const unsigned char const* b64String) {
 	if (b64String == NULL) {
 		return NULL;
 	}
 	const unsigned int encodedLenght = strlen(b64String);
-	unsigned int lenght = (encodedLenght / 4 + (encodedLenght % 4 > 0)) * 3 + 1;
+	unsigned int paddingCount;
+	if (encodedLenght > 1 && b64String[encodedLenght - 2] == PADDING) {
+		paddingCount = 2;
+	} else if (encodedLenght > 0 && b64String[encodedLenght - 1] == PADDING) {
+		paddingCount = 1;
+	} else {
+		paddingCount = 0;
+	}
+	const unsigned int lenght = (encodedLenght / 4 + (encodedLenght % 4 > 0)) * 3 + 1 - paddingCount;
 	unsigned char* string = malloc(lenght);
 	if (string == NULL) {
 		return NULL;
 	}
-	unsigned int negativeOffset = 0;;
 	for (unsigned int index = 0; index < encodedLenght; index += 4) {
+		const unsigned char encodedBytes[4] = {
+			indexOf(b64String[index]),
+			indexOf(b64String[index + 1]),
+			index + 2 < encodedLenght ? indexOf(b64String[index + 2]) : PADDING,
+			index + 3 < encodedLenght ? indexOf(b64String[index + 3]) : PADDING
+		};
 		const unsigned int encodeOffset = index / 4;
-		const unsigned char first = indexOf(b64String[index]);
-		const unsigned char second = indexOf(b64String[index + 1]);
-		const unsigned char third = index + 2 < encodedLenght ? indexOf(b64String[index + 2]) : PADDING;
-		const unsigned char fourth = index + 3 < encodedLenght ? indexOf(b64String[index + 3]) : PADDING;
-		if (third == PADDING) {
-			negativeOffset = 2;
-		} else if (fourth == PADDING) {
-			negativeOffset = 1;
-		}
-		*(string + index - encodeOffset) = first << 2 | ((second >> 4) & 3);
-		*(string + index + 1 - encodeOffset) = second << 4 | (third != PADDING ? third >> 2 : 0);
-		*(string + index + 2 - encodeOffset) = third << 6 | (fourth & 63);
+		unsigned char* sequenceOffset = string + index - encodeOffset;
+		*(sequenceOffset) = encodedBytes[0] << 2 | ((encodedBytes[1] >> 4) & 3);
+		*(sequenceOffset + 1) = encodedBytes[1] << 4 | (encodedBytes[2] != PADDING ? encodedBytes[2] >> 2 : 0);
+		*(sequenceOffset + 2) = encodedBytes[2] << 6 | (encodedBytes[3] & 63);
 	}
-	if (negativeOffset > 0) {
-		lenght = lenght - negativeOffset;
-		string = realloc(string, lenght);
-	}
-	if (string != NULL) {
-		string[lenght - 1] = '\0';
-	}
+	string[lenght - 1] = '\0';
 	return string;
 }
