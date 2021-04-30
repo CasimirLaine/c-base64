@@ -3,7 +3,7 @@
 #include <stdlib.h>
 #include "b64.h"
 
-static const unsigned char INDEX_TABLE[] = {
+static const unsigned char INDEX_TABLE[64] = {
     'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J',
     'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T',
     'U', 'V', 'W', 'X', 'Y', 'Z', 'a', 'b', 'c', 'd',
