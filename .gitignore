@@ -1,43 +1,51 @@
 # Created by .ignore support plugin (hsz.mobi)
-### C++ template
-# Prerequisites
-*.d
+### CMake template
+CMakeLists.txt.user
+CMakeCache.txt
+CMakeFiles
+CMakeScripts
+Testing
+Makefile
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+_deps
 
-# Compiled Object files
-*.slo
-*.lo
-*.o
-*.obj
+### Windows template
+# Windows thumbnail cache files
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
 
-# Precompiled Headers
-*.gch
-*.pch
+# Dump file
+*.stackdump
 
-# Compiled Dynamic libraries
-*.so
-*.dylib
-*.dll
+# Folder config file
+[Dd]esktop.ini
 
-# Fortran module files
-*.mod
-*.smod
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
 
-# Compiled Static libraries
-*.lai
-*.la
-*.a
-*.lib
+# Windows Installer files
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
 
-# Executables
-*.exe
-*.out
-*.app
+# Windows shortcuts
+*.lnk
 
 ### C template
 # Prerequisites
+*.d
 
 # Object files
+*.o
 *.ko
+*.obj
 *.elf
 
 # Linker output
@@ -46,13 +54,25 @@
 *.exp
 
 # Precompiled Headers
+*.gch
+*.pch
 
 # Libraries
+*.lib
+*.a
+*.la
+*.lo
 
 # Shared objects (inc. Windows DLLs)
+*.dll
+*.so
 *.so.*
+*.dylib
 
 # Executables
+*.exe
+*.out
+*.app
 *.i*86
 *.x86_64
 *.hex
@@ -147,8 +167,12 @@ StyleCopReport.xml
 *_i.c
 *_p.c
 *_h.h
+*.ilk
 *.meta
+*.obj
 *.iobj
+*.pch
+*.pdb
 *.ipdb
 *.pgc
 *.pgd
@@ -432,5 +456,41 @@ MigrationBackup/
 # Fody - auto-generated XML schema
 FodyWeavers.xsd
 
-enc_temp_folder/
-test.c
+### C++ template
+# Prerequisites
+*.d
+
+# Compiled Object files
+*.slo
+*.lo
+*.o
+*.obj
+
+# Precompiled Headers
+*.gch
+*.pch
+
+# Compiled Dynamic libraries
+*.so
+*.dylib
+*.dll
+
+# Fortran module files
+*.mod
+*.smod
+
+# Compiled Static libraries
+*.lai
+*.la
+*.a
+*.lib
+
+# Executables
+*.exe
+*.out
+*.app
+
+external/
+inc/
+lib/
+out/
